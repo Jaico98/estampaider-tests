@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comentarios de Clientes</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Comentarios sobre nuestros productos</h1>
+
+    <form id="comentarioForm">
+        <label for="producto">Producto:</label>
+        <select id="producto">
+            <option value="Camiseta piel durazno">Camiseta piel durazno</option>
+            <option value="Camiseta de algodón">Camiseta de algodón</option>
+            <option value="Mug 11 Oz">Mug 11 Oz</option>
+            <option value="Vaso viajero 14 Oz">Vaso viajero 14 Oz</option>
+            <option value="Mug Magico">Mug Magico</option>
+            <option value="Caramañola en aluminio">Caramañola en aluminio</option>
+            <option value="Llavero">Llavero</option>
+            <option value="Imán">Imán</option>
+            <option value="Cachucha">Cachucha</option>
+        </select>
+
+        <label for="cliente">Nombre:</label>
+        <input type="text" id="cliente" required>
+
+        <label for="comentario">Comentario:</label>
+        <textarea id="comentario" required></textarea>
+
+        <button type="submit">Enviar Comentario</button>
+    </form>
+
+    <h2>Comentarios Recientes</h2>
+    <ul id="listaComentarios"></ul>
+
+    <script src="/js/comentarios.js"></script>
+</body>
+</html>

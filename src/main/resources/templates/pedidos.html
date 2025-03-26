@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Realizar Pedido - Estampaider</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <h1>Realizar Pedido</h1>
+    
+    <form id="pedidoForm">
+        <label for="producto">Producto:</label>
+        <select id="producto">
+            <option value="Camiseta piel durazno">Camiseta piel durazno - $30.000</option>
+            <option value="Camiseta de algodón">Camiseta de algodón - $40.000</option>
+            <option value="Mug 11 Oz">Mug 11 Oz - $19.000</option>
+            <option value="Mug Polka Travel">Mug Polka Travel 450 ml - $30.000</option>
+            <option value="Llavero">Llavero - $8.000</option>
+            <option value="Imán">Imán - $7.000</option>
+            <option value="Cachucha">Cachucha - $20.000</option>
+        </select>
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" min="1" required>
+
+        <label for="cliente">Nombre del Cliente:</label>
+        <input type="text" id="cliente" required>
+
+        <button type="submit">Realizar Pedido</button>
+    </form>
+
+    <h2>Lista de Pedidos</h2>
+    <ul id="listaPedidos"></ul>
+
+    <script src="/js/pedidos.js"></script>
+</body>
+</html>

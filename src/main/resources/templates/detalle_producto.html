@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalles del Producto</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2 class="text-center">Detalles del Producto</h2>
+
+        <div class="card">
+            <h3 th:text="${producto.nombre}"></h3>
+            <p><strong>Precio:</strong> <span th:text="'$' + ${#numbers.formatDecimal(producto.precio, 0, 'COMMA', 2, 'POINT')}"></span></p>
+            <p><strong>Descripción:</strong> <span th:text="${producto.descripcion}"></span></p>
+        </div>
+
+        <!-- Botón para regresar -->
+        <div class="text-center">
+            <a href="/productos" class="btn btn-secondary">Volver a Productos</a>
+        </div>
+    </div>
+</body>
+</html>
+

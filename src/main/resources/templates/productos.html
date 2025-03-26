@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+</head>
+<body>
+    <h1>Productos disponibles</h1>
+    <ul>
+        <th:block th:each="producto : ${productos}">
+            <li>
+                <strong th:text="${producto.nombre}"></strong> -
+                <span th:text="${producto.precio}"></span> COP <br>
+                <span th:text="${producto.descripcion}"></span>
+            </li>
+        </th:block>
+    </ul>
+</body>
+</html>
+
