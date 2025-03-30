@@ -3,130 +3,120 @@ const btnMenu = document.querySelector('.btn-menu');
 const barIconX = document.querySelector('.btn-menu i');
 const menu = document.querySelector('.list-container');
 const menuContent = document.querySelector('.menu');
-let activador = true;
 
-btnMenu.addEventListener('click', () => {
-    menu.classList.toggle('active');
-    barIconX.classList.toggle('fa-times');
-
-    if (activador) {
-        menu.style.left = '0%';
-    } else {
-        menu.style.left = '-100%';
-    }
-
-    activador = !activador;
+btnMenu?.addEventListener('click', () => {
+    menu?.classList.toggle('active');
+    barIconX?.classList.toggle('fa-times');
 });
 
-// Add class "active" to selected menu item
-document.querySelectorAll('.lists li a').forEach((element) => {
-    element.addEventListener('click', (event) => {
-        document.querySelectorAll('.lists li a').forEach(link => link.classList.remove('active'));
+// Agregar clase "active" al menú seleccionado
+document.querySelectorAll('.lists li a').forEach(element => {
+    element.addEventListener('click', event => {
+        document.querySelector('.lists li a.active')?.classList.remove('active');
         event.target.classList.add('active');
     });
 });
 
-// Scroll Effect
+// Scroll Effect con debounce
 let prevScrollPos = window.pageYOffset;
 const goTop = document.querySelector('.go-top');
 
-window.addEventListener('scroll', () => {
+function debounce(func, wait = 50) {
+    let timeout;
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(this, args), wait);
+    };
+}
+
+window.addEventListener('scroll', debounce(() => {
     let currentScrollPos = window.pageYOffset;
-    requestAnimationFrame(() => {
-        if (prevScrollPos > currentScrollPos) {
-            menuContent.style.top = '0px';
-        } else {
-            menuContent.style.top = '-60px';
-        }
+
+    if (menuContent) {
+        menuContent.style.top = prevScrollPos > currentScrollPos ? '0px' : '-60px';
+        menuContent.style.borderBottom = currentScrollPos <= 600 ? 'none' : '3px solid #ff2e63';
         prevScrollPos = currentScrollPos;
+    }
 
-        if (currentScrollPos <= 600) {
-            menuContent.style.borderBottom = 'none';
-            goTop.style.right = '-100px';
-        } else {
-            menuContent.style.borderBottom = '3px solid #ff2e63';
-            goTop.style.right = '0px';
-        }
-    });
-});
+    goTop?.style.setProperty('right', currentScrollPos <= 600 ? '-100px' : '0px');
+}, 100));
 
-document.getElementById("ver-mas").addEventListener("click", async function () {
+// Obtener productos al hacer clic en "Ver más"
+const btnVerMas = document.getElementById("ver-mas");
+
+btnVerMas?.addEventListener("click", async function () {
     try {
-        const response = await fetch("http://localhost:8081/api/productos"); // Llamada al backend
-        if (!response.ok) throw new Error("Error al obtener productos");
+        const response = await fetch("http://localhost:8081/api/productos");
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
-        const productos = await response.json(); // Convertimos la respuesta en JSON
-        mostrarProductos(productos); // Llamamos a la función para mostrarlos
+        const productos = await response.json();
+        mostrarProductos(productos);
     } catch (error) {
-        console.error("Error:", error);
+        console.error("Error obteniendo productos:", error.message);
+        alert("Hubo un problema al cargar los productos. Inténtalo más tarde.");
     }
 });
 
 function mostrarProductos(productos) {
     const contenedor = document.getElementById("lista-productos");
-    contenedor.innerHTML = ""; // Limpiar contenido antes de agregar nuevos
+    if (!contenedor) return;
 
-    productos.forEach(producto => {
+    contenedor.innerHTML = "";
+    productos.forEach(({ nombre = "Sin nombre", precio = "No disponible", imagen }) => {
         const div = document.createElement("div");
         div.classList.add("producto");
+
         div.innerHTML = `
-            <h3>${producto.nombre}</h3>
-            <p>Precio: $${producto.precio}</p>
-            <img src="${producto.imagen}" alt="${producto.nombre}" width="150">
+            <h3>${nombre}</h3>
+            <p>Precio: $${precio}</p>
+            <img src="${imagen || 'placeholder.jpg'}" alt="${nombre}" width="150">
         `;
         contenedor.appendChild(div);
     });
 }
 
-
-// Go Top Click
-goTop.addEventListener('click', () => {
+// Botón Go Top
+goTop?.addEventListener('click', () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
-// Scroll to Section Smoothly
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
+// Scroll a secciones (Optimizado con delegación de eventos)
+document.body.addEventListener("click", function(e) {
+    if (e.target.tagName === "A" && e.target.getAttribute("href")?.startsWith("#")) {
         e.preventDefault();
-        const targetElement = document.querySelector(this.getAttribute('href'));
-        if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-        }
-    });
+        const targetElement = document.querySelector(e.target.getAttribute("href"));
+        targetElement?.scrollIntoView({ behavior: "smooth" });
+    }
 });
 
-// Form Validation
-document.getElementById("formulario").addEventListener("submit", function(event) {
-    let userName = document.getElementById("user").value.trim();
-    let userEmail = document.getElementById("email").value.trim();
-    let userMessage = document.getElementById("message").value.trim();
+// Validación de formulario con mensajes de error
+const formulario = document.getElementById("formulario");
 
-    if (!userName || !userEmail || !userMessage) {
-        alert("Por favor, completa todos los campos.");
-        event.preventDefault();
-        return;
-    }
+formulario?.addEventListener("submit", function(event) {
+    let errores = [];
+    const user = document.getElementById("user");
+    const email = document.getElementById("email");
+    const message = document.getElementById("message");
 
-    // Validar formato de correo
+    if (!user.value.trim()) errores.push("El usuario es obligatorio.");
+    if (!email.value.trim()) errores.push("El correo es obligatorio.");
+    if (!message.value.trim()) errores.push("El mensaje no puede estar vacío.");
+
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailPattern.test(userEmail)) {
-        alert("Por favor, ingresa un correo electrónico válido.");
+    if (!emailPattern.test(email.value.trim())) errores.push("El correo electrónico no es válido.");
+
+    if (errores.length > 0) {
         event.preventDefault();
+        document.getElementById("error-msg").innerText = errores.join("\n");
     }
 });
 
-//abajo
-document.querySelector('#abajo').addEventListener('click', () => {
-  window.scrollTo({
-      top: 600,
-      behavior: 'smooth'
-  });
-});
-
-//Ver más
-document.querySelector('#vermas').addEventListener('click', () => {
-  window.scrollTo({
-      top: 600,
-      behavior: 'smooth'
-  });
+// Scroll hacia abajo (botón "abajo" y "ver más")
+document.addEventListener("click", function(event) {
+    if (event.target.id === "abajo" || event.target.id === "ver-mas") {
+        window.scrollTo({
+            top: 600,
+            behavior: "smooth"
+        });
+    }
 });

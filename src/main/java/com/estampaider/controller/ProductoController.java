@@ -11,8 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-@RequestMapping("/api/productos")
+
 @CrossOrigin(origins = "*") // Permite llamadas desde cualquier origen (útil para frontend)
+@RequestMapping("/api")
 public class ProductoController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
@@ -22,7 +23,7 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    @GetMapping
+    @GetMapping("/productos")
     public ResponseEntity<List<Producto>> obtenerProductos() {
         List<Producto> productos = productoService.getAllProductos();
         if (productos.isEmpty()) {

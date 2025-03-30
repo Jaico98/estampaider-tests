@@ -252,6 +252,32 @@ html {
     background:var(--blue);
 }
 
+.list-container {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    transition: left 0.3s ease-in-out;
+}
+
+.list-container.active {
+    left: 0%;
+}
+
+.menu {
+    transition: top 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
+}
+
+.go-top {
+    position: fixed;
+    right: -100px;
+    transition: right 0.3s ease-in-out;
+}
+
+.go-top.visible {
+    right: 0px;
+}
+
 @media only screen and (max-width:773px ){
     .img-header .welcome h1{font-size: 40px;}
     .img-header .welcome > button{width: 130px; font-size: 20px;}
