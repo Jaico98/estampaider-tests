@@ -76,4 +76,15 @@ public class ProductoServiceImpl implements ProductoService {
         }
         return false;
     }
+
+    // Implementación de actualizarProducto()
+    @Override
+    public Producto actualizarProducto(Long id, Producto productoActualizado) {
+        return productoRepository.findById(id).map(producto -> {
+            producto.setNombre(productoActualizado.getNombre());
+            producto.setPrecio(productoActualizado.getPrecio());
+            producto.setDescripcion(productoActualizado.getDescripcion());
+            return productoRepository.save(producto);
+        }).orElseThrow(() -> new RuntimeException("Producto no encontrado con ID: " + id));
+    }
 }

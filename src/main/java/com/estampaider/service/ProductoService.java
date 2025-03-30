@@ -8,13 +8,14 @@ import java.util.Optional;
  * Servicio para la gestión de productos.
  */
 public interface ProductoService {
+    Producto actualizarProducto(Long id, Producto productoActualizado);
 
     /**
      * Obtiene todos los productos disponibles en la base de datos.
      * 
      * @return Lista de productos.
      */
-    List<Producto> getAllProductos();
+    public List<Producto> getAllProductos();
 
     /**
      * Busca un producto por su ID.
@@ -22,7 +23,7 @@ public interface ProductoService {
      * @param id ID del producto a buscar.
      * @return Un {@link Optional} con el producto si existe, de lo contrario vacío.
      */
-    Optional<Producto> getProductoById(Long id);
+    public Optional<Producto> getProductoById(Long id);
 
     /**
      * Guarda o actualiza un producto en la base de datos.
@@ -30,7 +31,7 @@ public interface ProductoService {
      * @param producto Producto a guardar.
      * @return Producto guardado con su ID asignado.
      */
-    Producto saveProducto(Producto producto);
+    public Producto saveProducto(Producto producto);
 
     /**
      * Elimina un producto de la base de datos si existe.
@@ -39,5 +40,5 @@ public interface ProductoService {
      * @return {@code true} si el producto fue eliminado, {@code false} si no se
      *         encontró.
      */
-    boolean deleteProducto(Long id);
+    public boolean deleteProducto(Long id);
 }

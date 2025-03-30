@@ -2,21 +2,23 @@ package com.estampaider.controller;
 
 import com.estampaider.service.ProductoService;
 import com.estampaider.model.Producto;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Objects;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @RestController
-
 @CrossOrigin(origins = "*") // Permite llamadas desde cualquier origen (útil para frontend)
 @RequestMapping("/api/productos")
 public class ProductoController {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductoController.class);
+
     private final ProductoService productoService;
 
     public ProductoController(ProductoService productoService) {
@@ -45,12 +47,29 @@ public class ProductoController {
 
     @PostMapping
     public ResponseEntity<Producto> crearProducto(@RequestBody Producto producto) {
-        if (producto.getNombre() == null || producto.getPrecio() <= 0) {
-            logger.error("Datos inválidos para crear el producto");
+        if (producto.getNombre() == null || producto.getNombre().trim().isEmpty()) {
+            logger.error("El nombre del producto no puede estar vacío.");
+            return ResponseEntity.badRequest().build();
+        }
+        if (Objects.isNull(producto.getPrecio()) || producto.getPrecio() <= 0) {
+            logger.error("El precio del producto debe ser mayor a 0.");
             return ResponseEntity.badRequest().build();
         }
         Producto nuevoProducto = productoService.saveProducto(producto);
         return ResponseEntity.ok(nuevoProducto);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Producto> actualizarProducto(@PathVariable Long id,
+            @RequestBody Producto productoActualizado) {
+        Optional<Producto> productoExistente = productoService.getProductoById(id);
+        if (productoExistente.isPresent()) {
+            Producto producto = productoService.actualizarProducto(id, productoActualizado);
+            return ResponseEntity.ok(producto);
+        } else {
+            logger.warn("Intento de actualizar un producto inexistente con ID {}", id);
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/{id}")
