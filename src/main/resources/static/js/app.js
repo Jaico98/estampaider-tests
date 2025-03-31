@@ -13,9 +13,10 @@ btnMenu?.addEventListener('click', () => {
 document.querySelectorAll('.lists li a').forEach(element => {
     element.addEventListener('click', event => {
         document.querySelector('.lists li a.active')?.classList.remove('active');
-        event.target.classList.add('active');
+        event.currentTarget.classList.add('active');
     });
 });
+
 
 // Scroll Effect con debounce
 let prevScrollPos = window.pageYOffset;
@@ -50,6 +51,8 @@ btnVerMas?.addEventListener("click", async function () {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
         const productos = await response.json();
+        if (!Array.isArray(productos)) throw new Error("La respuesta no es un array");
+
         mostrarProductos(productos);
     } catch (error) {
         console.error("Error obteniendo productos:", error.message);
@@ -97,6 +100,7 @@ formulario?.addEventListener("submit", function(event) {
     const user = document.getElementById("user");
     const email = document.getElementById("email");
     const message = document.getElementById("message");
+    const errorContainer = document.getElementById("error-msg");
 
     if (!user.value.trim()) errores.push("El usuario es obligatorio.");
     if (!email.value.trim()) errores.push("El correo es obligatorio.");
@@ -107,16 +111,21 @@ formulario?.addEventListener("submit", function(event) {
 
     if (errores.length > 0) {
         event.preventDefault();
-        document.getElementById("error-msg").innerText = errores.join("\n");
+        errorContainer.innerText = errores.join("\n");
+        errorContainer.style.display = "block";
+    } else {
+        errorContainer.style.display = "none";
     }
 });
 
+
 // Scroll hacia abajo (botón "abajo" y "ver más")
 document.addEventListener("click", function(event) {
-    if (event.target.id === "abajo" || event.target.id === "ver-mas") {
-        window.scrollTo({
-            top: 600,
-            behavior: "smooth"
-        });
+    const id = event.target.id;
+    if (id === "abajo" || id === "ver-mas") {
+        window.scrollTo({ top: 600, behavior: "smooth" });
+    } else if (id === "go-top") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
     }
 });
+

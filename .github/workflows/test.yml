@@ -19,6 +19,12 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          
+      - name: Instalar MongoDB
+        run: sudo systemctl start mongod
 
       - name: Ejecutar pruebas
         run: mvn test
+
+
+
