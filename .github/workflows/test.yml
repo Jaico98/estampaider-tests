@@ -19,12 +19,32 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          
+
+      # 🟢 Instalación de SQLite
+      - name: Instalar SQLite
+        run: |
+          sudo apt update
+          sudo apt install -y sqlite3 libsqlite3-dev
+
+      # 🟢 Crear la base de datos SQLite
+      - name: Crear base de datos SQLite
+        run: |
+          sqlite3 estampaider.db "VACUUM;"
+
+      # 🟢 Instalación de MongoDB
       - name: Instalar MongoDB
-        run: sudo systemctl start mongod
+        run: |
+          sudo apt update
+          sudo apt install -y mongodb
+          sudo systemctl start mongod
+          sudo systemctl enable mongod
 
+      # 🟢 Verificar MongoDB
+      - name: Verificar MongoDB
+        run: |
+          mongo --eval 'db.runCommand({ connectionStatus: 1 })'
+
+      # 🟢 Ejecutar pruebas
       - name: Ejecutar pruebas
-        run: mvn test
-
-
-
+        run: |
+          mvn test
