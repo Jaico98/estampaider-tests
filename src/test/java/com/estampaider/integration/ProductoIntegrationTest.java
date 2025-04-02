@@ -75,5 +75,6 @@ public class ProductoIntegrationTest {
                 .uri("/api/productos/{id}", nuevoProducto.getId())
                 .exchange()
                 .expectStatus().isNotFound();
+
     }
 }

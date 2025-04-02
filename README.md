@@ -14,3 +14,7 @@ Además, cuenta con un pipeline CI/CD configurado en **GitHub Actions**.
 Ejecutar:
 ```sh
 mvn test
+
+## Cómo ejecutar las pruebas
+1. Instalar MongoDB y correr `mongod`
+2. Clonar el repositorio:

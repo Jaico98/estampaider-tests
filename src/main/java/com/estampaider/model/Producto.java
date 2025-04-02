@@ -2,10 +2,12 @@ package com.estampaider.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.AllArgsConstructor;
 
 /**
  * Entidad que representa un producto en la base de datos.
  */
+
 @Entity
 @Table(name = "productos")
 @Getter

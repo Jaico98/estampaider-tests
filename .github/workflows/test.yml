@@ -20,17 +20,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 🟢 Instalación de SQLite
-      - name: Instalar SQLite
-        run: |
-          sudo apt update
-          sudo apt install -y sqlite3 libsqlite3-dev
-
-      # 🟢 Crear la base de datos SQLite
-      - name: Crear base de datos SQLite
-        run: |
-          sqlite3 estampaider.db "VACUUM;"
-
       # 🟢 Instalación de MongoDB
       - name: Instalar MongoDB
         run: |
@@ -42,9 +31,17 @@ jobs:
       # 🟢 Verificar MongoDB
       - name: Verificar MongoDB
         run: |
-          mongo --eval 'db.runCommand({ connectionStatus: 1 })'
+          mongosh --eval 'db.runCommand({ connectionStatus: 1 })'
+
+      # 🟢 Configurar base de datos en MongoDB
+      - name: Configurar base de datos en MongoDB
+        run: |
+          mongosh --eval 'use estampaider'
 
       # 🟢 Ejecutar pruebas
       - name: Ejecutar pruebas
-        run: |
-          mvn test
+        run: mvn test
+
+      # 🟢 Mostrar logs de pruebas
+      - name: Mostrar logs de pruebas
+        run: cat target/surefire-reports/*.txt || true
