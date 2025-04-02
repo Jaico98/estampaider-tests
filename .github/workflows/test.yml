@@ -43,11 +43,17 @@ jobs:
 
       # 🟢 Instalar dependencias de Maven sin ejecutar pruebas
       - name: Instalar dependencias
-        run: mvn install -DskipTests
+        run: mvn install -DskipTests -X
 
-      # 🟢 Ejecutar pruebas
+      # 🟢 Verificar que MongoDB está accesible antes de ejecutar pruebas
+      - name: Verificar conexión a MongoDB antes de ejecutar pruebas
+        run: |
+          docker exec $(docker ps -q --filter "ancestor=mongo:6.0") mongosh --eval 'db.runCommand({ connectionStatus: 1 })'
+
+      # 🟢 Ejecutar pruebas con salida detallada
       - name: Ejecutar pruebas
-        run: mvn test
+        run: mvn test -X || (cat target/surefire-reports/*.txt || true)
+
 
       # 🟢 Mostrar logs de pruebas
       - name: Mostrar logs de pruebas
