@@ -23,10 +23,12 @@ jobs:
       # 🟢 Instalación de MongoDB
       - name: Instalar MongoDB
         run: |
-          sudo apt update
-          sudo apt install -y mongodb
-          sudo systemctl start mongod
-          sudo systemctl enable mongod
+         wget -qO - https://pgp.mongodb.com/server-6.0.asc | sudo tee /etc/apt/trusted.gpg.d/mongodb.asc
+         echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
+         sudo apt update
+         sudo apt install -y mongodb-org
+         sudo systemctl start mongod
+         sudo systemctl enable mongod
 
       # 🟢 Verificar MongoDB
       - name: Verificar MongoDB
