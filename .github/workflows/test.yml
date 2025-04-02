@@ -16,7 +16,7 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-cmd "echo 'db.runCommand({ ping: 1 })' | mongosh localhost:27017" 
           --health-interval 10s 
           --health-timeout 5s 
           --health-retries 5
@@ -34,12 +34,12 @@ jobs:
       # 🟢 Esperar a que MongoDB esté listo
       - name: Verificar MongoDB
         run: |
-          mongosh --eval 'db.runCommand({ connectionStatus: 1 })'
+          echo 'db.runCommand({ connectionStatus: 1 })' | mongo localhost:27017
 
       # 🟢 Configurar base de datos en MongoDB
       - name: Configurar base de datos en MongoDB
         run: |
-          mongosh --eval 'use estampaider'
+          echo 'use estampaider' | mongo localhost:27017
 
       # 🟢 Instalar dependencias de Maven sin ejecutar pruebas
       - name: Instalar dependencias
