@@ -10,6 +10,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
 
+    services:
+      mongodb:
+        image: mongo:6.0
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
+
     steps:
       - name: Clonar el repositorio
         uses: actions/checkout@v3
@@ -20,17 +31,7 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      # 🟢 Instalación de MongoDB
-      - name: Instalar MongoDB on Ubuntu 24.04
-        run: |
-         wget -qO - https://pgp.mongodb.com/server-6.0.asc | sudo tee /etc/apt/trusted.gpg.d/mongodb.asc
-         echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu $(lsb_release -cs)/mongodb-org/6.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-6.0.list
-         sudo apt update
-         sudo apt install -y mongodb-org
-         sudo systemctl start mongod
-         sudo systemctl enable mongod
-
-      # 🟢 Verificar MongoDB
+      # 🟢 Esperar a que MongoDB esté listo
       - name: Verificar MongoDB
         run: |
           mongosh --eval 'db.runCommand({ connectionStatus: 1 })'
@@ -39,6 +40,10 @@ jobs:
       - name: Configurar base de datos en MongoDB
         run: |
           mongosh --eval 'use estampaider'
+
+      # 🟢 Instalar dependencias de Maven sin ejecutar pruebas
+      - name: Instalar dependencias
+        run: mvn install -DskipTests
 
       # 🟢 Ejecutar pruebas
       - name: Ejecutar pruebas
